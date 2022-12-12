@@ -13,7 +13,7 @@ export const login = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_KEY);
     res
       .status(200)
-      .cookie("accessToken", token, { httpOnly: true })
+      .cookie("accessToken", token, { httpOnly: true, secure: true, sameSite: "none" })
       .json(details);
   } catch (error) {
     console.log(error.message);
@@ -36,7 +36,7 @@ export const register = async (req, res) => {
     const savedUser = await newUser.save();
     const { password, ...details } = savedUser._doc;
     const token = jwt.sign({ id: savedUser._id }, process.env.JWT_KEY);
-    res.cookie("accessToken", token, { httpOnly: true });
+    res.cookie("accessToken", token, { httpOnly: true, secure: true, sameSite: "none" });
     res.status(201).json(details);
   } catch (error) {
     if (error.code === 11000) {

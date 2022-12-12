@@ -12,7 +12,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://budgetapp-react-frontend.onrender.com",
     credentials: true
   })
 );
