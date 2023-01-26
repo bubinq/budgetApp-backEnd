@@ -60,17 +60,8 @@ export const getLastThreeMonthsAmounts = async (req, res) => {
           totalAmount: {
             $sum: "$amount",
           },
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          data: {
-            $cond: {
-              if: { $eq: ["$data", []] },
-              then: {},
-              else: "$data",
-            },
+          year: {
+            year: { $year: "$createdAt" },
           },
         },
       },
