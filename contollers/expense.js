@@ -63,6 +63,18 @@ export const getLastThreeMonthsAmounts = async (req, res) => {
         },
       },
       {
+        $project: {
+          _id: 1,
+          data: {
+            $cond: {
+              if: { $eq: ["$data", []] },
+              then: {},
+              else: "$data",
+            },
+          },
+        },
+      },
+      {
         $sort: { _id: -1 },
       },
     ]);
@@ -95,10 +107,7 @@ export const getMonthlyUserExpenses = async (req, res) => {
   const lastDay = new Date(year, month, 0).getDate();
   try {
     const expenses = await Expense.find({ ownerId: req.params.userId })
-      .gte(
-        "createdAt",
-        `${year}-${month < 10 ? "0" : ""}${month}-01T00:00:00Z`
-      )
+      .gte("createdAt", `${year}-${month < 10 ? "0" : ""}${month}-01T00:00:00Z`)
       .lte(
         "createdAt",
         `${year}-${month < 10 ? "0" : ""}${month}-${lastDay}T00:00:00Z`
