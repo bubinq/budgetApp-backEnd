@@ -60,13 +60,13 @@ export const getLastThreeMonthsAmounts = async (req, res) => {
           totalAmount: {
             $sum: "$amount",
           },
-          year: {
-            year: { $year: "$createdAt" },
-          },
         },
       },
       {
         $sort: { _id: -1 },
+      },
+      {
+        $addFields: { year: { $year: "$createdAt" } },
       },
     ]);
     res.status(200).json(expenses);
