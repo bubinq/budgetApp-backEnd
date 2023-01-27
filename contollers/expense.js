@@ -65,9 +65,6 @@ export const getLastThreeMonthsAmounts = async (req, res) => {
       {
         $sort: { _id: -1 },
       },
-      {
-        $addFields: { year: { $year: "$createdAt" } },
-      },
     ]);
     res.status(200).json(expenses);
   } catch (error) {
