@@ -29,12 +29,12 @@ export const getAllUserExpenses = async (req, res) => {
 
 export const getLastThreeMonthsAmounts = async (req, res) => {
   const { year, month } = req.body;
-  const { lastDay, prevTwoYear, prevTwoMonth, prevTwoDate } = getDateRange(
+  const { prevTwoYear, prevTwoMonth, prevTwoDate } = getDateRange(
     year,
     month
   );
   const start = new Date(prevTwoYear, prevTwoMonth - 1, prevTwoDate);
-  const end = new Date(year, month - 1, lastDay);
+  const end = new Date(year, month, 1);
   try {
     const expenses = await Expense.aggregate([
       {
@@ -42,7 +42,7 @@ export const getLastThreeMonthsAmounts = async (req, res) => {
           ownerId: req.user.id,
           createdAt: {
             $gt: start,
-            $lte: end,
+            $lt: end,
           },
         },
       },
@@ -81,7 +81,7 @@ export const getUserPrefExpenses = async (req, res) => {
       .gte("createdAt", `${year}-${month < 10 ? "0" : ""}${month}-01T00:00:00Z`)
       .lte(
         "createdAt",
-        `${year}-${month < 10 ? "0" : ""}${month}-${lastDay}T00:00:00Z`
+        `${year}-${month < 10 ? "0" : ""}${month}-${lastDay}T23:59:00Z`
       );
     res.status(200).json(expenses);
   } catch (error) {
@@ -98,7 +98,7 @@ export const getMonthlyUserExpenses = async (req, res) => {
       .gte("createdAt", `${year}-${month < 10 ? "0" : ""}${month}-01T00:00:00Z`)
       .lte(
         "createdAt",
-        `${year}-${month < 10 ? "0" : ""}${month}-${lastDay}T00:00:00Z`
+        `${year}-${month < 10 ? "0" : ""}${month}-${lastDay}T23:59:00Z`
       );
     res.status(200).json(expenses);
   } catch (error) {
