@@ -29,7 +29,7 @@ export const editBudget = async (req, res) => {
   try {
     const budget = await Budget.findOneAndUpdate(
       { ownerId: req.user.id },
-      { $inc: { amount: type === "Increase" ? amount : -amount } },
+      { $inc: { amount: type === "Deposit" ? amount : -amount } },
       { new: true }
     );
     res.status(200).json(budget);
